@@ -1,8 +1,9 @@
 import AppError from "../../errors/AppError";
-import { IUser } from "./user.interface";
+import { IsActive, IUser, Role } from "./user.interface";
 import User from "./user.model";
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt'
+import { JwtPayload } from "jsonwebtoken";
 // import { JwtPayload } from 'jsonwebtoken';
 
 const createUser = async (payload: Partial<IUser>) => {
@@ -25,18 +26,52 @@ const createUser = async (payload: Partial<IUser>) => {
     return user;
 }
 
-// const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
+const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
 
-//     const isUserExits = await User.findOne(userId);
+    const ifUserExist = await User.findById(userId);
 
-//     if (isUserExits) {
-//         throw new AppError(httpStatus.NOT_FOUND, 'User not found')
-//     }
-
-
-// }
+    if (!ifUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found")
+    }
 
 
+
+    if (payload.role) {
+        if (decodedToken.role === Role.RECEIVER || decodedToken.role === Role.SENDER) {
+            throw new AppError(httpStatus.FORBIDDEN, "You are not authorized")
+        }
+
+        if (payload.isActive || payload.isDeleted || payload.isVerified) {
+            if (decodedToken.role === Role.RECEIVER || decodedToken.role === Role.SENDER) {
+                throw new AppError(httpStatus.FORBIDDEN, "You are not authorized!")
+            }
+        }
+
+        if (payload.password) {
+            payload.password = await bcrypt.hash(payload.password, 10)
+        }
+
+        const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, { new: true, runValidators: true });
+
+        return newUpdatedUser;
+    }
+
+
+}
+
+const getAllUsers = async () => {
+    const users = await User.find();
+    const totalUsers = await User.countDocuments();
+
+    return {
+        data: users,
+        meta: {
+            total: totalUsers
+        }
+    }
+}
 export const userServices = {
-    createUser
+    createUser,
+    getAllUsers,
+    updateUser
 }

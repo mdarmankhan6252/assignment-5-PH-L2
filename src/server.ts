@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './app/config/db';
 import userRouter from './app/modules/user/user.route';
+import authRouter from './app/modules/auth/auth.route';
+import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
 
 dotenv.config();
 
@@ -24,9 +26,11 @@ app.get("/", (req: Request, res: Response) => {
 
 //application route
 
-app.use('/api/v1/user', userRouter)
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/auth', authRouter);
 
 
+app.use(globalErrorHandler)
 
 app.listen(port, () =>{
     console.log("Sever is running on port", port)
