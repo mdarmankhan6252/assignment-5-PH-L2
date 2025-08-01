@@ -3,8 +3,7 @@ import { IUser } from "../user/user.interface"
 import User from "../user/user.model";
 import httpStatus from 'http-status'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken';
-import { generateToken } from "../../utils/jwt";
+import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
 
 const loginApi = async (payload: Partial<IUser>) => {
 
@@ -22,20 +21,31 @@ const loginApi = async (payload: Partial<IUser>) => {
       throw new AppError(httpStatus.BAD_REQUEST, "Incorrect Password")
    }
 
-   const jwtPayload = {
-      userId: isUserExits._id,
-      email: isUserExits.email,
-      role: isUserExits.role
-   }
+   const userTokens = createUserTokens(isUserExits)
 
-   const accessToken = generateToken(jwtPayload, process.env.JWT_SECRET as string, '1d')
+   const { password: pass, ...rest } = isUserExits.toObject();
+
 
    return {
-      accessToken
+      accessToken: userTokens.accessToken,
+      refreshToken: userTokens.refreshToken,
+      user: rest
    }
 
 }
 
+const getNewAccessToken = async (refreshToken: string) => {
+   const newAccessToken = await createNewAccessTokenWithRefreshToken(refreshToken);
+
+   return {
+      accessToken: newAccessToken
+   }
+}
+
+
+
+
 export const AuthServices = {
-   loginApi
+   loginApi,
+   getNewAccessToken
 }

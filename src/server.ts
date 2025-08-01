@@ -5,6 +5,7 @@ import connectDB from './app/config/db';
 import userRouter from './app/modules/user/user.route';
 import authRouter from './app/modules/auth/auth.route';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
+import cookieParser from 'cookie-parser'
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ connectDB();
 //middlewares
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser())
 
 
 //root route
