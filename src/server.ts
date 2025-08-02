@@ -6,6 +6,7 @@ import userRouter from './app/modules/user/user.route';
 import authRouter from './app/modules/auth/auth.route';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser'
+import parcelRouter from './app/modules/parcel/parcel.route';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/parcel', parcelRouter);
 
 
 app.use(globalErrorHandler)

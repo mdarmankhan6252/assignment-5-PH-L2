@@ -12,9 +12,9 @@ export const createUserTokens = (user: Partial<IUser>) => {
       role: user.role
    }
 
-   const accessToken = generateToken(jwtPayload, process.env.JWT_SECRET as string, '30')
+   const accessToken = generateToken(jwtPayload, process.env.JWT_SECRET as string, '30d')
 
-   const refreshToken = generateToken(jwtPayload, process.env.JWT_REFRESH_SECRET as string, '180d');
+   const refreshToken = generateToken(jwtPayload, process.env.JWT_REFRESH_SECRET as string, '60d');
 
    return {
       accessToken,
