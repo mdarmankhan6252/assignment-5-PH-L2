@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const parcel_controller_1 = require("./parcel.controller");
+const checkAuth_1 = require("../../middlewares/checkAuth");
+const user_interface_1 = require("../user/user.interface");
+const parcelRouter = (0, express_1.Router)();
+parcelRouter.post('/create', (0, checkAuth_1.checkAuth)(user_interface_1.Role.SENDER, user_interface_1.Role.ADMIN), parcel_controller_1.ParcelController.createParcel);
+parcelRouter.patch('/status/:id', parcel_controller_1.ParcelController.updateParcelStatus);
+parcelRouter.delete('/:id', parcel_controller_1.ParcelController.deleteParcel);
+parcelRouter.get('/all-parcels', (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), parcel_controller_1.ParcelController.getAllParcels);
+exports.default = parcelRouter;
