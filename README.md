@@ -21,14 +21,14 @@ This is a backend API for a Parcel Delivery System, built with **Node.js**, **Ex
 
 ## 🛠️ API
 
--- POST	/api/v1/user/register	Register a new user
--- POST	/api/v1/auth/login	Login and receive access & refresh tokens
--- POST	/api/v1/auth/refresh-token	Get a new access token using refresh token
--- POST	/api/v1/auth/logout	Logout and clear tokens
+- POST	/api/v1/user/register	Register a new user
+- POST	/api/v1/auth/login	Login and receive access & refresh tokens
+- POST	/api/v1/auth/refresh-token	Get a new access token using refresh token
+- POST	/api/v1/auth/logout	Logout and clear tokens
 
 ---------
 
--- POST	/api/v1/parcel/create	Create a new parcel
-GET	/api/v1/parcel/all-parcels	Get all parcels (Admin only or filterable)
-PATCH	/api/v1/parcel/:id	Update parcel details 
-DELETE	/api/v1/parcel/:id	Delete a parcel
+- POST	/api/v1/parcel/create	Create a new parcel
+- GET	/api/v1/parcel/all-parcels	Get all parcels (Admin only or filterable)
+- PATCH	/api/v1/parcel/:id	Update parcel details 
+- DELETE	/api/v1/parcel/:id	Delete a parcel
