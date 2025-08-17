@@ -30,8 +30,24 @@ const deleteParcel = async (id: string) => {
 
 //get all parcels
 const getAllParcels = async () => {
-   const parcels = await Parcel.find();
+   const parcels = await Parcel
+      .find()
+      .populate("sender", "name email role")
+      .populate("receiver", "name email role");
    return parcels;
+}
+
+const getParcelByEmail = async (email: string) => {
+   const parcel = await Parcel.findOne({ email })
+   return parcel;
+}
+
+const getParcelById = async (id: string) => {
+   const parcel = await Parcel
+      .findById(id)
+      .populate("sender")
+      .populate("receiver");
+   return parcel;
 }
 
 
@@ -39,5 +55,7 @@ export const ParcelServices = {
    createParcel,
    updateParcel,
    deleteParcel,
-   getAllParcels
+   getAllParcels,
+   getParcelByEmail,
+   getParcelById
 }

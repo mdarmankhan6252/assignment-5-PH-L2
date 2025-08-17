@@ -45,11 +45,25 @@ const getAllUsers = async (req: Request, res: Response) => {
     })
 }
 
+const getSingleUser = async (req: Request, res: Response) => {
+
+    const id = req.params.id;
+    const result = await userServices.getSingleUser(id);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "User retrieved successfully!",
+        data: result
+    })
+
+}
+
 
 
 
 export const UserControllers = {
     createUser,
     getAllUsers,
-    updateUser
+    updateUser,
+    getSingleUser
 }

@@ -6,6 +6,7 @@ import httpStatus from 'http-status'
 import AppError from "../../errors/AppError";
 import { Role } from "../user/user.interface";
 import { ParcelServices } from "./parcel.service";
+import User from "../user/user.model";
 
 const createParcel = async (req: Request, res: Response) => {
 
@@ -88,6 +89,12 @@ const updateParcelStatus = async (req: Request, res: Response) => {
    const { id } = req.params;
    const { currentStatus } = req.body;
 
+   const isParcelExist = await Parcel.findById(id);
+
+   if (isParcelExist?.currentStatus === 'CANCELLED') {
+      throw new AppError(httpStatus.BAD_REQUEST, "The status is not changeable now!")
+   }
+
    const updatedParcel = await ParcelServices.updateParcel(id, currentStatus)
 
    sendResponse(res, {
@@ -95,7 +102,8 @@ const updateParcelStatus = async (req: Request, res: Response) => {
       success: true,
       message: "Parcel status updated successfully!",
       data: updatedParcel
-   });
+   })
+
 };
 
 
@@ -108,6 +116,32 @@ const getAllParcels = async (req: Request, res: Response) => {
       data: result
    })
 
+}
+
+const getParcelById = async (req: Request, res: Response) => {
+   const id = req.params.id;
+
+   const parcel = await ParcelServices.getParcelById(id);
+   sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Parcel is retrieved successfully",
+      data: parcel
+   })
+
+}
+
+const getParcelByEmail = async (req: Request, res: Response) => {
+   const email = req.params.email;
+
+   const parcel = await ParcelServices.getParcelByEmail(email)
+
+   sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Parcel is retrieved successfully",
+      data: parcel
+   })
 }
 
 const deleteParcel = async (req: Request, res: Response) => {
@@ -132,5 +166,7 @@ export const ParcelController = {
    createParcel,
    updateParcelStatus,
    getAllParcels,
-   deleteParcel
+   deleteParcel,
+   getParcelByEmail,
+   getParcelById
 }

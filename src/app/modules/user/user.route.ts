@@ -14,8 +14,15 @@ userRouter.post('/register' ,validateRequest(createUserZodSchema), UserControlle
 //api/v1/user/all-users
 userRouter.get('/all-users',checkAuth(Role.ADMIN), UserControllers.getAllUsers)
 
+
+//api/v1/user/single-user
+
+
 //api/v1/user/:id
 userRouter.patch('/:id', checkAuth(...Object.values(Role)), UserControllers.updateUser)
+
+
+
 
 
 export default userRouter;
